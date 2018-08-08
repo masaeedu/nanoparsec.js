@@ -1,3 +1,5 @@
+const { test } = require("ava");
+
 const { adt, _ } = require("@masaeedu/fp");
 
 const Parser = require("./index.js");
@@ -16,20 +18,23 @@ const {
 {
   // prettier-ignore
   const tests = [
-    [char("a")    , "a -> b" , ["a", " -> b"]],
-    [natural      , "123142" , [123142, ""]  ],
-    [natural      , "abcd"   , []            ],
-    [natural      , "123abcd", [123, "abcd"] ],
-    [natural      , "-123"   , []            ],
-    [integer      , "123"    , [123, ""]     ],
-    [integer      , "-123"   , [-123, ""]    ],
-    [string("foo"), "abcd"   , []            ],
-    [string("foo"), "food"   , ["foo", "d"]  ],
-    [spaces       , "  durr" , ["  ", "durr"]]
+    ['char("a")'    , char("a")    , "a -> b" , ["a", " -> b"]],
+    ['natural'      , natural      , "123142" , [123142, ""]  ],
+    ['natural'      , natural      , "abcd"   , []            ],
+    ['natural'      , natural      , "123abcd", [123, "abcd"] ],
+    ['natural'      , natural      , "-123"   , []            ],
+    ['integer'      , integer      , "123"    , [123, ""]     ],
+    ['integer'      , integer      , "-123"   , [-123, ""]    ],
+    ['string("foo")', string("foo"), "abcd"   , []            ],
+    ['string("foo")', string("foo"), "food"   , ["foo", "d"]  ],
+    ['spaces'       , spaces       , "  durr" , ["  ", "durr"]]
   ];
 
-  const results = tests.map(([p, s]) => p(s));
-  console.log(results);
+  tests.map(([testname, parser, input]) => {
+    test(`${testname}("${input}")`, t => {
+      t.snapshot(parser(input));
+    });
+  });
 }
 
 // An example use case: parsing arithmetic expressions into an ADT
@@ -37,15 +42,17 @@ const {
   const Expr = adt({ Add: [_, _], Mul: [_, _], Sub: [_, _], Lit: [_] });
 
   // :: Expr -> Int
-  const eval = Expr.match({
-    Add: a => b => eval(a) + eval(b),
-    Mul: a => b => eval(a) * eval(b),
-    Sub: a => b => eval(a) - eval(b),
+  const evaluate = Expr.match({
+    Add: a => b => evaluate(a) + evaluate(b),
+    Mul: a => b => evaluate(a) * evaluate(b),
+    Sub: a => b => evaluate(a) - evaluate(b),
     Lit: n => n
   });
 
+  const { map, alt } = Parser;
+
   // :: Parser Expr
-  const int = Parser.map(Expr.Lit)(integer);
+  const int = map(Expr.Lit)(integer);
 
   // :: Parser Expr
   const expr = s => chainl1(term)(addOp)(s);
@@ -54,13 +61,13 @@ const {
   const term = s => chainl1(factor)(mulOp)(s);
 
   // :: Parser Expr
-  const factor = s => Parser.alt(int)(parens(expr))(s);
+  const factor = s => alt(int)(parens(expr))(s);
 
   // :: String -> (a -> a -> a) -> Parser (a -> a -> a)
-  const infixOp = x => f => Parser.map(_ => f)(reserved(x));
+  const infixOp = x => f => map(_ => f)(reserved(x));
 
   // :: Parser (Expr -> Expr -> Expr)
-  const addOp = Parser.alt(infixOp("+")(Expr.Add))(infixOp("-")(Expr.Sub));
+  const addOp = alt(infixOp("+")(Expr.Add))(infixOp("-")(Expr.Sub));
 
   // :: Parser (Expr -> Expr -> Expr)
   const mulOp = infixOp("*")(Expr.Mul);
@@ -71,7 +78,9 @@ const {
     "(1+2)*11" // => [33, '']
   ];
 
-  const results = tests.map(s => Parser.map(eval)(expr)(s));
-
-  console.log(results);
+  tests.forEach(s => {
+    test(`map(evaluate)(expr)("${s}")`, t => {
+      t.snapshot(map(evaluate)(expr)(s));
+    });
+  });
 }
