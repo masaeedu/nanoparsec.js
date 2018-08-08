@@ -2,5 +2,11 @@
   "name": "nanoparsec",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@masaeedu/fp": "^7.3.0"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0"
+  }
 }
