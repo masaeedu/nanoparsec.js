@@ -1,6 +1,6 @@
 const { test } = require("ava");
 
-const { adt, _ } = require("@masaeedu/fp");
+const { adt, _, Str } = require("@masaeedu/fp");
 
 const Parser = require("./index.js");
 const {
@@ -31,7 +31,7 @@ const {
   ];
 
   tests.map(([testname, parser, input]) => {
-    test(`${testname}("${input}")`, t => {
+    test(`${testname}(${JSON.stringify(input)})`, t => {
       t.snapshot(parser(input));
     });
   });
@@ -81,6 +81,45 @@ const {
   tests.forEach(s => {
     test(`map(evaluate)(expr)("${s}")`, t => {
       t.snapshot(map(evaluate)(expr)(s));
+    });
+  });
+}
+
+// Parsing lines
+{
+  const { eol, not, lines } = Parser;
+
+  let tests = [];
+
+  // EOL detection
+  tests = [
+    ...tests,
+    ...["", "\n", "\r", "\r\n", "sadasd"].map(x => ["eol", eol, x])
+  ];
+
+  // Negative parsing
+  tests = [
+    ...tests,
+    ...["", "\n", "abcd\n", "\r\n", "xyz\n123"].map(x => [
+      "not(eol)",
+      not(eol),
+      x
+    ])
+  ];
+
+  // Parsing lines
+  const corpus = `
+This is a test
+
+another line
+woot
+
+`;
+  tests = [...tests, ["lines", lines, corpus]];
+
+  tests.map(([testname, parser, input]) => {
+    test(`${testname}(${JSON.stringify(input)})`, t => {
+      t.snapshot(parser(input));
     });
   });
 }

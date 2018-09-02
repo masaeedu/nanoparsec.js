@@ -25,10 +25,16 @@ const deriveMonad = Fn.pipe([
   implement(Apply)
 ]);
 
-// :: [Char]
-const digits = Arr.range(10).map(x => x.toString());
-// :: Char -> Bool
-const isDigit = c => digits.indexOf(c) !== -1;
+const Char = (() => {
+  // :: [Char]
+  const digits = Arr.range(10).map(x => x.toString());
+  // :: Char -> Bool
+  const isDigit = c => digits.indexOf(c) !== -1;
+  // :: Char -> Char -> Bool
+  const equals = a => b => a === b;
+
+  return { digits, isDigit, equals };
+})();
 
 // Parsing
 
@@ -36,7 +42,9 @@ const isDigit = c => digits.indexOf(c) !== -1;
 // possibly partial interpretations of that string
 // :: type Parser a = String -> [(a, String)]
 const Parser = (() => {
-  // Monad
+  // #################
+  // ### INSTANCES ###
+  // #################
 
   // Force a single interpretation of a string
   // without consuming any of it
@@ -65,6 +73,10 @@ const Parser = (() => {
       }
     })(pa(s));
 
+  // ###################
+  // ### COMBINATORS ###
+  // ###################
+
   // :: Parser a -> Parser [a]
   const some = v => lift2(Arr.Cons)(v)(s => many(v)(s));
   // :: Parser a -> Parser [a]
@@ -92,7 +104,7 @@ const Parser = (() => {
   const chainl = p => op => a => alt(chainl1(p)(op))(of(a));
 
   // :: Char -> Parser Char
-  const char = c => satisfy(c_ => c === c_);
+  const char = c => satisfy(Char.equals(c));
 
   // :: String -> Parser String
   const string = Str.match({
@@ -100,17 +112,50 @@ const Parser = (() => {
     Cons: c => cs => chain(_ => map(_ => `${c}${cs}`)(string(cs)))(char(c))
   });
 
-  // :: Parser String
-  const spaces = map(ss => ss.join(""))(many(oneOf([" ", "\n", "\r"])));
-
   // :: Parser a -> Parser a
   const token = p => chain(a => map(_ => a)(spaces))(p);
 
   // :: String -> Parser String
   const reserved = s => token(string(s));
 
+  // :: Parser a -> Parser a
+  const peek = p => s => chain(a => _ => of(a)(s))(p)(s);
+
+  // :: Parser a -> Parser String
+  const not = p => {
+    const stop = map(_ => "")(peek(p));
+    const more = lift2(Str.append)(item)(x => not(p)(x));
+
+    return alt(end)(alt(stop)(more));
+  };
+
+  // ##################
+  // ### PRIMITIVES ###
+  // ##################
+
+  // :: Parser String
+  const end = s => (s === "" ? [["", ""]] : []);
+
   // :: Parser Char
-  const digit = satisfy(isDigit);
+  const space = oneOf([" ", "\n", "\r"]);
+
+  // :: Parser String
+  const spaces = map(ss => ss.join(""))(many(space));
+
+  // :: Parser Char
+  const lf = char("\n");
+
+  // :: Parser Char
+  const cr = char("\r");
+
+  // :: Parser String
+  const crlf = lift2(Str.append)(cr)(lf);
+
+  // :: Parser String
+  const eol = alt(lf)(crlf);
+
+  // :: Parser Char
+  const digit = satisfy(Char.isDigit);
 
   // :: Parser Nat
   const natural = map(ds => parseInt(ds.join("")))(some(digit));
@@ -119,6 +164,12 @@ const Parser = (() => {
   const integer = chain(sign => map(ds => parseInt(`${sign}${ds}`))(natural))(
     alt(char("-"))(of(""))
   );
+
+  // :: Parser String
+  const line = lift2(Fn.const)(not(eol))(eol);
+
+  // :: Parser [String]
+  const lines = many(line);
 
   // :: Parser a -> Parser a
   const parens = m =>
@@ -143,12 +194,22 @@ const Parser = (() => {
     chainl,
     char,
     string,
-    spaces,
     token,
     reserved,
+    peek,
+    not,
+    end,
+    space,
+    spaces,
+    lf,
+    cr,
+    crlf,
+    eol,
     digit,
     natural,
     integer,
+    line,
+    lines,
     parens
   };
 })();
