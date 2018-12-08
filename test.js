@@ -1,6 +1,6 @@
 const { test } = require("ava");
 
-const { adt, _ } = require("@masaeedu/fp");
+const { adt, match } = require("@masaeedu/adt");
 
 const Parser = require("./index.js");
 const {
@@ -39,10 +39,16 @@ const {
 
 // An example use case: parsing arithmetic expressions into an ADT
 {
-  const Expr = adt({ Add: [_, _], Mul: [_, _], Sub: [_, _], Lit: [_] });
+  const Expr = adt({
+    Add: ["Expr", "Expr"],
+    Mul: ["Expr", "Expr"],
+    Sub: ["Expr", "Expr"],
+    Lit: ["a"]
+  });
+  const { Add, Mul, Sub, Lit } = Expr;
 
   // :: Expr -> Int
-  const evaluate = Expr.match({
+  const evaluate = match({
     Add: a => b => evaluate(a) + evaluate(b),
     Mul: a => b => evaluate(a) * evaluate(b),
     Sub: a => b => evaluate(a) - evaluate(b),
@@ -52,7 +58,7 @@ const {
   const { map, alt } = Parser;
 
   // :: Parser Expr
-  const int = map(Expr.Lit)(integer);
+  const int = map(Lit)(integer);
 
   // :: Parser Expr
   const expr = s => chainl1(term)(addOp)(s);
@@ -67,10 +73,10 @@ const {
   const infixOp = x => f => map(_ => f)(reserved(x));
 
   // :: Parser (Expr -> Expr -> Expr)
-  const addOp = alt(infixOp("+")(Expr.Add))(infixOp("-")(Expr.Sub));
+  const addOp = alt(infixOp("+")(Add))(infixOp("-")(Sub));
 
   // :: Parser (Expr -> Expr -> Expr)
-  const mulOp = infixOp("*")(Expr.Mul);
+  const mulOp = infixOp("*")(Mul);
 
   // prettier-ignore
   const tests = [
