@@ -1,6 +1,6 @@
 const { test } = require("ava");
 
-const { adt, _, Str } = require("@masaeedu/fp");
+const { adt, _ } = require("@masaeedu/fp");
 
 const Parser = require("./index.js");
 const {

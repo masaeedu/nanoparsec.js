@@ -3,9 +3,6 @@
 // http://dev.stephendiehl.com/fun/002_parsers.html
 
 const {
-  adt,
-  _,
-  fail,
   Fn,
   Arr,
   Str,
