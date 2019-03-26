@@ -127,6 +127,19 @@ const Parser = (() => {
   // ### PRIMITIVES ###
   // ##################
 
+  // :: Regex -> Parser String
+  const regex = r => s => {
+    const x = s.match(r);
+
+    if (x === null) return [];
+
+    const { index } = x;
+    if (index !== 0) return [];
+
+    const [result] = x;
+    return [[result, s.slice(result.length)]];
+  };
+
   // :: Parser String
   const end = s => (s === "" ? [["", ""]] : []);
 
@@ -195,6 +208,7 @@ const Parser = (() => {
     reserved,
     peek,
     not,
+    regex,
     end,
     space,
     spaces,
