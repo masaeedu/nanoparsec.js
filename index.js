@@ -6,6 +6,7 @@ const {
   Fn,
   Arr,
   Str,
+  Either,
   Applicanoid,
   implement,
   Chain,
@@ -185,6 +186,22 @@ const Parser = (() => {
   const parens = m =>
     chain(_ => chain(n => map(_ => n)(reserved(")")))(m))(reserved("("));
 
+  // ##############
+  // ### UNPACK ###
+  // ##############
+  // :: Parser a -> String -> Either String a
+  const run = p => s => {
+    const result = p(s);
+
+    return result.length < 1
+      ? Either.Left("No match")
+      : result.length > 1
+      ? Either.Left(`Ambiguous match: ${JSON.stringify(result)}`)
+      : result[0][1] !== ""
+      ? Either.Left(`Incomplete match: ${JSON.stringify(result)}`)
+      : Either.Right(result[0][0]);
+  };
+
   return {
     of,
     chain,
@@ -221,7 +238,8 @@ const Parser = (() => {
     integer,
     line,
     lines,
-    parens
+    parens,
+    run
   };
 })();
 

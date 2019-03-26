@@ -11,7 +11,9 @@ const {
   spaces,
   reserved,
   chainl1,
-  parens
+  parens,
+  run,
+  tryBoth
 } = Parser;
 
 // Primitive tests
@@ -126,6 +128,22 @@ woot
   tests.map(([testname, parser, input]) => {
     test(`${testname}(${JSON.stringify(input)})`, t => {
       t.snapshot(parser(input));
+    });
+  });
+}
+
+// Running a parser into an Either
+{
+  const inputs = [
+    ["running a failing parser", run(char("a"))("b")],
+    ["running an ambiguous parser", run(tryBoth(char("x"))(char("x")))("x")],
+    ["running a partial parser", run(char("f"))("foo")],
+    ["running a successful parser", run(char("a"))("a")]
+  ];
+
+  inputs.forEach(([name, result]) => {
+    test(name, t => {
+      t.snapshot(result);
     });
   });
 }
