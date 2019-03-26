@@ -109,9 +109,6 @@ const Parser = (() => {
     Cons: c => cs => chain(_ => map(_ => `${c}${cs}`)(string(cs)))(char(c))
   });
 
-  // :: Parser a -> Parser a
-  const token = p => chain(a => map(_ => a)(spaces))(p);
-
   // :: String -> Parser String
   const reserved = s => token(string(s));
 
@@ -138,6 +135,9 @@ const Parser = (() => {
 
   // :: Parser String
   const spaces = map(ss => ss.join(""))(many(space));
+
+  // :: Parser a -> Parser a
+  const token = lift2(_ => a => a)(spaces);
 
   // :: Parser Char
   const lf = char("\n");
