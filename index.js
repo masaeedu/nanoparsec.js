@@ -184,7 +184,7 @@ const Parser = (() => {
 
   // :: Parser a -> Parser a
   const parens = m =>
-    chain(_ => chain(n => map(_ => n)(reserved(")")))(m))(reserved("("));
+    map(([_, v]) => v)(Arr.sequence(Parser)([reserved("("), m, reserved(")")]));
 
   // ##############
   // ### UNPACK ###
