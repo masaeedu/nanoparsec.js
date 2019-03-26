@@ -60,9 +60,9 @@
     pretty-ms "^0.2.1"
     text-table "^0.2.0"
 
-"@masaeedu/adt@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@masaeedu/adt/-/adt-1.0.3.tgz#4551f0ea90f72bb0f98b56c8bf647e62cb10cde4"
+"@masaeedu/adt@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@masaeedu/adt/-/adt-1.1.0.tgz#11273ad28eef92def5420cbd99f799a5b7bd30d5"
 
 "@masaeedu/fp@^7.3.0":
   version "7.3.0"
