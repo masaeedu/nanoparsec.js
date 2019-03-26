@@ -52,7 +52,7 @@ const Parser = (() => {
   // generate a parser to parse the remainder of the string
   // under that interpretation
   // :: (a -> Parser b) -> Parser a -> Parser b
-  const chain = f => p => s => Arr.foldMap(Arr)(([a, s_]) => f(a)(s_))(p(s));
+  const chain = f => p => s => Arr.foldMap(Arr)(Fn.uncurry(f))(p(s));
 
   const { map, ap, lift2 } = deriveMonad({ of, chain });
 
