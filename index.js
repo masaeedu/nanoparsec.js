@@ -70,9 +70,9 @@ const Parser = (() => {
       }
     })(pa(s));
 
-  // ###################
-  // ### COMBINATORS ###
-  // ###################
+  // ############
+  // ### MISC ###
+  // ############
 
   // :: Parser a -> Parser [a]
   const some = v => lift2(Arr.Cons)(v)(s => many(v)(s));
