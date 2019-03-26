@@ -151,7 +151,7 @@ const Parser = (() => {
   const spaces = map(ss => ss.join(""))(many(space));
 
   // :: Parser a -> Parser a
-  const token = lift2(_ => a => a)(spaces);
+  const token = Fn.flip(lift2(_ => a => a))(spaces);
 
   // :: Parser Char
   const lf = char("\n");
