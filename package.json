@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@masaeedu/fp": "^7.3.0"
+    "@masaeedu/fp": "https://github.com/masaeedu/fp.git#dev"
   },
   "devDependencies": {
     "@masaeedu/adt": "^1.1.0",

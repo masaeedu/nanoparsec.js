@@ -39,11 +39,11 @@
     slide "^1.1.5"
 
 "@babel/polyfill@^7.0.0-beta.52":
-  version "7.0.0-beta.56"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-beta.56.tgz#6942d474d0e9cee7124477df11e97ba192764919"
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.4.0.tgz#90f9d68ae34ac42ab4b4aa03151848f536960218"
   dependencies:
-    core-js "^2.5.7"
-    regenerator-runtime "^0.11.1"
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.2"
 
 "@concordance/react@^1.0.0":
   version "1.0.0"
@@ -60,16 +60,27 @@
     pretty-ms "^0.2.1"
     text-table "^0.2.0"
 
-"@masaeedu/adt@^1.1.0":
+"@masaeedu/adt@^1.0.3", "@masaeedu/adt@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@masaeedu/adt/-/adt-1.1.0.tgz#11273ad28eef92def5420cbd99f799a5b7bd30d5"
 
-"@masaeedu/fp@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/@masaeedu/fp/-/fp-7.3.0.tgz#e08cf941a3137992a17526982a98d0fbbba25a84"
+"@masaeedu/do@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@masaeedu/do/-/do-0.0.1.tgz#ce35ee8c728238e5db2b069a8e4501afe05e48f2"
+
+"@masaeedu/fp@https://github.com/masaeedu/fp.git#dev":
+  version "8.0.0"
+  resolved "https://github.com/masaeedu/fp.git#b5d7d20d00c414c31ed37a14b37bb04fdabd0914"
   dependencies:
     "@babel/polyfill" "^7.0.0-beta.52"
+    "@masaeedu/adt" "^1.0.3"
+    "@masaeedu/do" "^0.0.1"
+    "@masaeedu/infix" "^1.2.0"
     natch "^1.1.1"
+
+"@masaeedu/infix@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@masaeedu/infix/-/infix-1.2.0.tgz#3ca1265db27da4a8e02785035430b6dead16ec3a"
 
 abbrev@1:
   version "1.1.1"
@@ -824,9 +835,13 @@ core-assert@^0.2.0:
     buf-compare "^1.0.0"
     is-error "^2.2.0"
 
-core-js@^2.0.0, core-js@^2.4.0, core-js@^2.5.0, core-js@^2.5.7:
+core-js@^2.0.0, core-js@^2.4.0, core-js@^2.5.0:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
+
+core-js@^2.6.5:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -2133,9 +2148,13 @@ regenerate@^1.2.1:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
 
-regenerator-runtime@^0.11.0, regenerator-runtime@^0.11.1:
+regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+
+regenerator-runtime@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
 
 regex-cache@^0.4.2:
   version "0.4.4"
