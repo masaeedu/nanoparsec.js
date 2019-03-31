@@ -151,7 +151,7 @@ const Parser = (() => {
   const end = s => (s === "" ? [["", ""]] : []);
 
   // :: Parser Char
-  const space = oneOf([" ", "\n", "\r"]);
+  const space = char(" ");
 
   // :: Parser String
   const spaces = map(ss => ss.join(""))(many(space));
