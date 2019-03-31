@@ -130,6 +130,10 @@ const Parser = (() => {
     return lift2(Arr.append)(first)(rest);
   };
 
+  // :: Parser _ -> Parser c -> Parser c
+  const surroundedBy = ps => pc =>
+    Fn.passthru([ps, pc, ps])([Arr.sequence(M), M.map(([, c]) => c)]);
+
   // ##################
   // ### PRIMITIVES ###
   // ##################
@@ -231,6 +235,7 @@ const Parser = (() => {
     peek,
     not,
     sepBy,
+    surroundedBy,
     regex,
     end,
     space,
