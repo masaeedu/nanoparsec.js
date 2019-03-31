@@ -122,6 +122,14 @@ const Parser = (() => {
     return alt(end)(alt(stop)(more));
   };
 
+  // :: Parser _ -> Parser c -> Parser [c]
+  const sepBy = ps => pc => {
+    const first = alt(map(_ => [])(end))(map(Arr.of)(pc));
+    const rest = many(M["*>"](ps)(pc));
+
+    return lift2(Arr.append)(first)(rest);
+  };
+
   // ##################
   // ### PRIMITIVES ###
   // ##################
@@ -222,6 +230,7 @@ const Parser = (() => {
     reserved,
     peek,
     not,
+    sepBy,
     regex,
     end,
     space,
