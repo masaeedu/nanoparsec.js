@@ -55,7 +55,8 @@ const Parser = (() => {
   // :: (a -> Parser b) -> Parser a -> Parser b
   const chain = f => p => s => Arr.foldMap(Arr)(Fn.uncurry(f))(p(s));
 
-  const { map, ap, lift2 } = deriveMonad({ of, chain });
+  const M = deriveMonad({ of, chain });
+  const { map, ap, lift2 } = M;
 
   // Alternative
   const { empty: fail, append: tryBoth } = Applicanoid(Fn)(Arr);
@@ -203,11 +204,7 @@ const Parser = (() => {
   };
 
   return {
-    of,
-    chain,
-    map,
-    ap,
-    lift2,
+    ...M,
     fail,
     tryBoth,
     zero,
