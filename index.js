@@ -111,9 +111,6 @@ const Parser = (() => {
     Cons: c => cs => chain(_ => map(_ => `${c}${cs}`)(string(cs)))(char(c))
   });
 
-  // :: String -> Parser String
-  const reserved = s => token(string(s));
-
   // :: Parser a -> Parser a
   const peek = p => s => chain(a => _ => of(a)(s))(p)(s);
 
@@ -153,6 +150,9 @@ const Parser = (() => {
 
   // :: Parser a -> Parser a
   const token = Fn.flip(lift2(_ => a => a))(spaces);
+
+  // :: String -> Parser String
+  const reserved = s => token(string(s));
 
   // :: Parser Char
   const lf = char("\n");
