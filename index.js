@@ -106,10 +106,7 @@ const Parser = (() => {
   const char = c => satisfy(Char.equals(c));
 
   // :: String -> Parser String
-  const string = Str.match({
-    Nil: of(Str.Nil),
-    Cons: c => cs => chain(_ => map(_ => `${c}${cs}`)(string(cs)))(char(c))
-  });
+  const string = n => s => (s.startsWith(n) ? [[n, s.substr(n.length)]] : []);
 
   // :: Parser a -> Parser a
   const peek = p => s => chain(a => _ => of(a)(s))(p)(s);
