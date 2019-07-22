@@ -56,7 +56,7 @@ const Parser = (() => {
   const chain = f => p => s => Arr.foldMap(Arr)(Fn.uncurry(f))(p(s));
 
   const M = deriveMonad({ of, chain });
-  const { map, ap, lift2 } = M;
+  const { map, lift2 } = M;
 
   // Alternative
   const { empty: fail, append: tryBoth } = Applicanoid(Fn)(Arr);
@@ -158,7 +158,7 @@ const Parser = (() => {
   const spaces = map(ss => ss.join(""))(many(space));
 
   // :: Parser a -> Parser a
-  const token = Fn.flip(lift2(_ => a => a))(spaces);
+  const token = lift2(_ => a => a)(spaces);
 
   // :: String -> Parser String
   const reserved = s => token(string(s));
